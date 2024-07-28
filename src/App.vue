@@ -1,16 +1,3 @@
-<template>
-  <div class="container">
-    <Cabecalho :tarefas-pendentes="getTarefasPendentes().length" />
-    <Formulario 
-      :trocar-filtro="evento => estado.filtro = evento.target.value" 
-      :tarefa-temp="estado.tarefaTemp" 
-      :edita-tarefa-temp="evento => estado.tarefaTemp = evento.target.value" 
-      :cadastra-tarefa="cadastraTarefa" 
-    />
-    <ListaDeTarefas :tarefas="getTarefasFiltradas()" />
-  </div>
-</template>
-
 <script setup>
 import { reactive } from 'vue';
 import Cabecalho from './components/Cabecalho.vue';
@@ -18,7 +5,7 @@ import Formulario from './components/Formulario.vue';
 import ListaDeTarefas from './components/ListaDeTarefas.vue';
 
 const estado = reactive({
-  filtro: 'todas',
+  filtro: 'Todas',
   tarefaTemp: '',
   tarefas: [
     {
@@ -37,32 +24,43 @@ const estado = reactive({
 });
 
 const getTarefasPendentes = () => {
-  return estado.tarefas.filter(tarefa => !tarefa.finalizada);
-};
+  return estado.tarefas.filter(tarefa => !tarefa.finalizada)
 
-const getTarefasFinalizadas = () => {
-  return estado.tarefas.filter(tarefa => tarefa.finalizada);
-};
+}
+const getTarefasfinalizadas = () => {
+  return estado.tarefas.filter(tarefa => tarefa.finalizada)
 
+}
 const getTarefasFiltradas = () => {
   const { filtro } = estado;
+
   switch (filtro) {
     case 'pendentes':
       return getTarefasPendentes();
     case 'finalizadas':
-      return getTarefasFinalizadas();
+      return getTarefasfinalizadas();
     default:
       return estado.tarefas;
   }
-};
-
+}
 const cadastraTarefa = () => {
-  if (estado.tarefaTemp) {
-    estado.tarefas.push({
-      titulo: estado.tarefaTemp,
-      finalizada: false,
-    });
-    estado.tarefaTemp = '';
+
+  const tarefaNova = {
+    titulo: estado.tarefaTemp,
+    finalizada: false,
   }
-};
+  estado.tarefas.push(tarefaNova);
+  estado.tarefaTemp = '';
+}
 </script>
+
+<template>
+  <div class="container">
+    <cabecalho :tarefas-pendentes="getTarefasPendentes().length" />
+    <Formulario :trocar-filtro="evento => estado.filtro = evento.target.value" :tarefa-temp="estado.tarefaTemp" :edita-tarefa-temp="evento => estado.tarefaTemp = evento.target.value"
+      :cadastra-tarefa="cadastraTarefa" />
+
+ <ListaDeTarefas :tarefas="getTarefasFiltradas()" /> 
+
+  </div>
+</template>
